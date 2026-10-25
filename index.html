@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17130f">
+  <meta name="description" content="ARAIOEI Smart Try-On Mirror — กระจกอัจฉริยะลองชุดเสมือนจริง เพื่อประสบการณ์แฟชั่นที่สะดวกและทันสมัย">
+  <title>ARAIOEI | Smart Try-On Mirror</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #17130f;
+      --ink-soft: #211b15;
+      --gold: #c5ad83;
+      --gold-light: #e1d0ad;
+      --cream: #e8ddc8;
+      --paper: #f8f5ef;
+      --brown: #403326;
+      --muted: #81766a;
+      --line: rgba(64, 51, 38, .17);
+      --dark-line: rgba(232, 221, 200, .18);
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans: 'Noto Sans Thai', 'DM Sans', sans-serif;
+      --max: 1200px;
+      --radius: 22px;
+      --shadow: 0 24px 70px rgba(24, 17, 10, .13);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 94px; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font-family: var(--sans); line-height: 1.75; font-weight: 400; }
+    body.menu-open { overflow: hidden; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { cursor: pointer; }
+    .container { width: min(calc(100% - 48px), var(--max)); margin-inline: auto; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 12px; color: var(--gold); text-transform: uppercase; font-family: 'DM Sans', sans-serif; font-size: .72rem; letter-spacing: .2em; font-weight: 600; }
+    .eyebrow::before { content: ''; width: 27px; height: 1px; background: currentColor; }
+    .section { padding: 108px 0; }
+    .section-heading { max-width: 720px; margin: 0 auto 50px; text-align: center; }
+    .section-heading .eyebrow { justify-content: center; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { line-height: 1.2; }
+    h1, h2 { font-weight: 500; }
+    .section-heading h2 { margin: 17px 0 16px; font-size: clamp(2rem, 4vw, 3.2rem); letter-spacing: -.025em; }
+    .section-heading h2 em, h1 em { font-family: var(--serif); font-weight: 400; }
+    .section-heading p { color: var(--muted); max-width: 650px; margin: 0 auto; }
+    .btn { display: inline-flex; min-height: 50px; align-items: center; justify-content: center; gap: 12px; padding: 12px 23px; border: 1px solid transparent; border-radius: 3px; letter-spacing: .02em; font-size: .91rem; font-weight: 600; transition: transform .25s ease, background .25s ease, color .25s ease, border-color .25s ease; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--gold); color: var(--ink); }
+    .btn-primary:hover { background: var(--gold-light); }
+    .btn-outline { background: transparent; border-color: rgba(232,221,200,.45); color: var(--paper); }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold-light); }
+    .btn-dark-outline { border-color: rgba(23,19,15,.25); color: var(--ink); }
+    .btn-dark-outline:hover { border-color: var(--brown); background: var(--brown); color: var(--paper); }
+    .text-link { display: inline-flex; align-items: center; gap: 10px; color: var(--brown); font-weight: 600; font-size: .9rem; border-bottom: 1px solid var(--gold); padding-bottom: 5px; transition: gap .2s ease; }
+    .text-link:hover { gap: 15px; }
+    .arrow { font-size: 1.1rem; line-height: 1; }
+
+    /* Header */
+    .site-header { height: 86px; position: sticky; top: 0; z-index: 100; background: rgba(23,19,15,.96); border-bottom: 1px solid rgba(197,173,131,.14); backdrop-filter: blur(18px); color: var(--paper); }
+    .nav-wrap { display: flex; height: 100%; align-items: center; justify-content: space-between; gap: 28px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; flex-shrink: 0; min-width: 175px; }
+    .brand-mark { width: 45px; height: 48px; object-fit: cover; object-position: center; }
+    .brand-name { display: flex; flex-direction: column; line-height: 1.18; }
+    .brand-name strong { font-family: var(--serif); font-size: 1.05rem; font-weight: 500; letter-spacing: .2em; }
+    .brand-name span { margin-top: 5px; color: var(--gold); font-family: 'DM Sans', sans-serif; font-size: .55rem; letter-spacing: .12em; }
+    .nav-links { display: flex; align-items: center; justify-content: center; gap: clamp(15px, 2vw, 28px); margin: 0; padding: 0; list-style: none; }
+    .nav-links a { position: relative; color: rgba(248,245,239,.76); font-size: .78rem; white-space: nowrap; transition: color .2s ease; }
+    .nav-links a::after { position: absolute; left: 0; bottom: -8px; width: 0; height: 1px; background: var(--gold); content: ''; transition: width .25s ease; }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold-light); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+    .nav-cta { min-height: 42px; padding: 8px 16px; font-size: .78rem; white-space: nowrap; }
+    .menu-toggle { display: none; align-items: center; justify-content: center; width: 42px; height: 42px; color: var(--paper); border: 1px solid var(--dark-line); background: transparent; }
+    .menu-toggle svg { width: 21px; height: 21px; }
+
+    /* Hero */
+    .hero { position: relative; overflow: hidden; color: var(--paper); background: var(--ink); min-height: 690px; isolation: isolate; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 76% 44%, rgba(197,173,131,.16), transparent 36%), linear-gradient(90deg, #17130f 1%, rgba(23,19,15,.97) 35%, rgba(23,19,15,.54) 70%, rgba(23,19,15,.25) 100%); z-index: -1; }
+    .hero-image { position: absolute; inset: 0 0 0 37%; z-index: -2; overflow: hidden; }
+    .hero-image img { width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: .84; }
+    .hero-grid { min-height: 690px; display: grid; grid-template-columns: 1.02fr .98fr; align-items: center; gap: 45px; padding-block: 76px; }
+    .hero-copy { max-width: 620px; padding-block: 22px; }
+    .hero-logo { width: 118px; height: 118px; object-fit: cover; object-position: center; margin: 0 0 22px -8px; mix-blend-mode: screen; opacity: .96; }
+    .hero h1 { max-width: 610px; margin: 20px 0 22px; font-size: clamp(2.7rem, 5vw, 4.8rem); letter-spacing: -.045em; }
+    .hero h1 em { color: var(--gold-light); }
+    .hero-lead { max-width: 520px; color: rgba(248,245,239,.77); font-size: 1rem; line-height: 1.95; }
+    .hero-tagline { display: flex; align-items: center; gap: 13px; margin: 26px 0 30px; color: var(--gold-light); font-size: .91rem; letter-spacing: .06em; }
+    .hero-tagline::before { content: ''; width: 32px; height: 1px; background: var(--gold); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 13px; }
+    .hero-note { display: flex; align-items: center; gap: 12px; margin-top: 48px; color: rgba(248,245,239,.5); font: 600 .68rem 'DM Sans', sans-serif; letter-spacing: .17em; text-transform: uppercase; }
+    .hero-note span { display: inline-block; height: 1px; width: 42px; background: rgba(197,173,131,.6); }
+    .hero-visual { position: relative; justify-self: end; width: min(100%, 460px); padding: 15px; border: 1px solid rgba(232,221,200,.37); background: rgba(248,245,239,.06); box-shadow: 0 25px 80px rgba(0,0,0,.35); transform: rotate(1.3deg); }
+    .hero-visual::before { content: ''; position: absolute; inset: 26px -10px -10px 26px; border: 1px solid rgba(197,173,131,.42); z-index: -1; }
+    .hero-visual img { aspect-ratio: 4 / 4.75; width: 100%; height: 100%; object-fit: cover; }
+    .visual-caption { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 14px 4px 2px; color: var(--gold-light); font: .66rem 'DM Sans', sans-serif; letter-spacing: .16em; text-transform: uppercase; }
+    .visual-caption span:last-child { color: rgba(248,245,239,.63); }
+    .hero-scroll { position: absolute; right: 28px; bottom: 34px; display: flex; align-items: center; gap: 12px; writing-mode: vertical-rl; color: rgba(248,245,239,.62); font: .62rem 'DM Sans', sans-serif; letter-spacing: .2em; }
+    .hero-scroll::after { content: ''; display: block; height: 38px; width: 1px; background: var(--gold); }
+
+    /* Product */
+    .product-section { background: var(--paper); }
+    .product-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(42px, 7vw, 90px); align-items: center; }
+    .product-art { position: relative; padding: 0 22px 22px 0; }
+    .product-art::after { position: absolute; right: 0; bottom: 0; width: 67%; height: 65%; border: 1px solid var(--gold); content: ''; z-index: 0; }
+    .product-art img { position: relative; z-index: 1; height: 550px; width: 100%; object-fit: cover; box-shadow: var(--shadow); }
+    .art-label { position: absolute; z-index: 2; left: -16px; bottom: 35px; padding: 16px 21px; background: var(--ink); color: var(--paper); box-shadow: var(--shadow); }
+    .art-label strong { display: block; font: 1.3rem var(--serif); font-weight: 400; letter-spacing: .05em; }
+    .art-label small { display: block; color: var(--gold); font-size: .64rem; letter-spacing: .16em; text-transform: uppercase; }
+    .product-copy .eyebrow { color: var(--brown); }
+    .product-copy h2 { margin: 18px 0 22px; font-size: clamp(2.2rem, 4vw, 3.35rem); letter-spacing: -.04em; }
+    .product-copy h2 span { display: block; margin-top: 10px; color: var(--muted); font: 500 .82rem var(--sans); letter-spacing: .04em; }
+    .product-copy > p { color: var(--muted); line-height: 1.95; }
+    .feature-list { display: grid; gap: 18px; margin: 32px 0 34px; }
+    .feature-row { display: grid; grid-template-columns: 50px 1fr; align-items: center; gap: 15px; }
+    .icon-box { display: flex; width: 50px; height: 50px; align-items: center; justify-content: center; color: var(--brown); border: 1px solid rgba(197,173,131,.85); }
+    .icon-box svg { width: 22px; height: 22px; stroke: currentColor; }
+    .feature-row h3 { margin: 0 0 3px; font-size: .98rem; font-weight: 600; }
+    .feature-row p { margin: 0; color: var(--muted); font-size: .84rem; line-height: 1.6; }
+
+    /* Objectives */
+    .objectives-section { background: #eee5d6; }
+    .objective-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .objective-card { position: relative; min-height: 285px; padding: 34px 30px 30px; background: rgba(248,245,239,.76); border: 1px solid rgba(197,173,131,.42); transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease; }
+    .objective-card:hover { transform: translateY(-6px); border-color: var(--gold); box-shadow: var(--shadow); }
+    .card-index { position: absolute; top: 24px; right: 26px; color: rgba(64,51,38,.2); font: 1rem var(--serif); }
+    .objective-card .icon-box { width: 60px; height: 60px; margin-bottom: 29px; }
+    .objective-card h3 { margin-bottom: 14px; font-size: 1.16rem; }
+    .objective-card p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.9; }
+    .mini-rule { width: 39px; height: 2px; background: var(--gold); margin-top: 23px; }
+
+    /* Steps */
+    .steps-section { background: var(--ink); color: var(--paper); }
+    .steps-section .section-heading p { color: rgba(248,245,239,.63); }
+    .steps-section .section-heading h2 { color: var(--paper); }
+    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; position: relative; }
+    .steps-grid::before { content: ''; position: absolute; top: 36px; left: 9%; right: 9%; height: 1px; background: linear-gradient(90deg, transparent, rgba(197,173,131,.75) 15%, rgba(197,173,131,.75) 85%, transparent); }
+    .step-card { position: relative; z-index: 1; }
+    .step-number { display: grid; place-items: center; width: 72px; height: 72px; margin: 0 auto 25px; border-radius: 50%; color: var(--gold-light); border: 1px solid var(--gold); background: var(--ink); font: 1.25rem var(--serif); }
+    .step-image { overflow: hidden; margin-bottom: 22px; border: 1px solid var(--dark-line); background: #282119; }
+    .step-image img { width: 100%; aspect-ratio: 4/3; object-fit: cover; filter: saturate(.76); transition: transform .5s ease, filter .5s ease; }
+    .step-card:hover .step-image img { transform: scale(1.04); filter: saturate(1); }
+    .step-label { color: var(--gold); font: 600 .65rem 'DM Sans', sans-serif; letter-spacing: .15em; }
+    .step-card h3 { margin: 8px 0 9px; font-size: 1.03rem; font-weight: 600; }
+    .step-card p { margin: 0; color: rgba(248,245,239,.64); font-size: .84rem; line-height: 1.9; }
+
+    /* Interactive demo */
+    .demo-section { background: var(--cream); }
+    .demo-shell { display: grid; grid-template-columns: .78fr 1.22fr; gap: 0; border: 1px solid rgba(64,51,38,.16); background: var(--paper); box-shadow: var(--shadow); }
+    .demo-controls { padding: clamp(26px, 4vw, 46px); background: #f0e8db; }
+    .demo-controls h3 { margin: 12px 0 12px; font: 500 clamp(1.6rem, 2.5vw, 2.1rem) var(--serif); }
+    .demo-controls > p { color: var(--muted); font-size: .89rem; line-height: 1.85; }
+    .style-options { display: grid; gap: 10px; margin: 26px 0; }
+    .style-option { display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; min-height: 59px; padding: 12px 15px; color: var(--brown); border: 1px solid rgba(64,51,38,.17); background: transparent; text-align: left; transition: background .2s, border .2s, color .2s; }
+    .style-option:hover { border-color: var(--gold); }
+    .style-option[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+    .style-option .style-name { font-weight: 600; font-size: .9rem; }
+    .style-option .style-sub { display: block; color: var(--muted); font-size: .72rem; font-weight: 400; }
+    .style-option[aria-pressed="true"] .style-sub { color: rgba(248,245,239,.6); }
+    .style-option .style-arrow { color: var(--gold); font-size: 1.1rem; }
+    .demo-buttons { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+    .reset-btn { border: 0; padding: 8px 0; color: var(--muted); background: transparent; font-size: .82rem; text-decoration: underline; text-underline-offset: 4px; }
+    .reset-btn:hover { color: var(--ink); }
+    .demo-note { margin: 22px 0 0; padding-top: 17px; border-top: 1px solid var(--line); color: #887b6c; font-size: .72rem; line-height: 1.7; }
+    .demo-stage { display: grid; grid-template-rows: 1fr auto; padding: 23px; min-width: 0; }
+    .demo-image-wrap { position: relative; overflow: hidden; min-height: 385px; background: #ddd4c6; }
+    .demo-image-wrap::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,.22); pointer-events: none; }
+    .demo-image-wrap img { width: 100%; height: 100%; min-height: 385px; object-fit: cover; transition: opacity .25s ease; }
+    .demo-badge { position: absolute; left: 18px; top: 18px; display: flex; align-items: center; gap: 9px; padding: 8px 12px; color: var(--paper); background: rgba(23,19,15,.86); font: 600 .63rem 'DM Sans', sans-serif; letter-spacing: .13em; text-transform: uppercase; }
+    .demo-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+    .demo-overlay { position: absolute; right: 17px; bottom: 17px; width: min(180px, 42%); padding: 15px; color: var(--paper); background: rgba(23,19,15,.9); border: 1px solid rgba(197,173,131,.55); }
+    .demo-overlay small { display: block; color: var(--gold); font: 600 .61rem 'DM Sans', sans-serif; letter-spacing: .13em; text-transform: uppercase; }
+    .demo-overlay strong { display: block; margin-top: 5px; font-size: .91rem; }
+    .demo-overlay span { display: block; margin-top: 4px; color: rgba(248,245,239,.64); font-size: .7rem; }
+    .demo-stage-footer { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 17px 4px 0; }
+    .demo-stage-footer strong { font-weight: 600; font-size: .9rem; }
+    .demo-stage-footer span { color: var(--muted); font-size: .75rem; }
+
+    /* Business benefits */
+    .business-section { background: var(--paper); }
+    .business-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 82px); align-items: center; }
+    .business-photo { position: relative; }
+    .business-photo img { width: 100%; height: 520px; object-fit: cover; }
+    .photo-stamp { position: absolute; right: -17px; bottom: 30px; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center; flex-direction: column; border-radius: 50%; color: var(--paper); background: var(--ink); border: 1px solid var(--gold); text-align: center; box-shadow: var(--shadow); }
+    .photo-stamp strong { font: 1.45rem var(--serif); font-weight: 400; }
+    .photo-stamp span { margin-top: 3px; color: var(--gold); font: .62rem 'DM Sans', sans-serif; letter-spacing: .14em; }
+    .business-copy .eyebrow { color: var(--brown); }
+    .business-copy h2 { margin: 18px 0 20px; font-size: clamp(2.2rem, 4vw, 3.2rem); }
+    .business-copy > p { color: var(--muted); line-height: 1.9; }
+    .benefit-list { list-style: none; margin: 29px 0 0; padding: 0; display: grid; gap: 15px; }
+    .benefit-list li { display: flex; align-items: flex-start; gap: 13px; font-size: .91rem; }
+    .check { flex: 0 0 22px; width: 22px; height: 22px; margin-top: 2px; display: grid; place-items: center; border: 1px solid var(--gold); color: var(--brown); font-size: .8rem; }
+
+    /* Specs */
+    .spec-section { background: #eee5d6; }
+    .spec-layout { display: grid; grid-template-columns: .72fr 1.28fr; gap: 54px; align-items: start; }
+    .spec-intro { position: sticky; top: 120px; }
+    .spec-intro h2 { margin: 18px 0; font-size: clamp(2rem, 4vw, 3rem); }
+    .spec-intro p { color: var(--muted); font-size: .9rem; line-height: 1.9; }
+    .spec-table-wrap { overflow: hidden; background: var(--paper); border: 1px solid rgba(64,51,38,.12); }
+    .spec-table { width: 100%; border-collapse: collapse; }
+    .spec-table th, .spec-table td { padding: 19px 22px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; font-size: .87rem; }
+    .spec-table tr:last-child th, .spec-table tr:last-child td { border-bottom: 0; }
+    .spec-table th { width: 38%; color: var(--brown); font-weight: 600; background: rgba(232,221,200,.28); }
+    .spec-table td { color: var(--muted); }
+    .spec-footnote { margin: 15px 0 0; color: #897d6f; font-size: .75rem; }
+
+    /* Contact */
+    .contact-section { background: var(--ink); color: var(--paper); }
+    .contact-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(36px, 6vw, 78px); align-items: start; }
+    .contact-copy { padding-top: 10px; }
+    .contact-copy h2 { margin: 18px 0 21px; font-size: clamp(2.2rem, 4.5vw, 3.5rem); }
+    .contact-copy > p { max-width: 475px; color: rgba(248,245,239,.67); line-height: 1.95; }
+    .contact-divider { width: 62px; height: 1px; margin: 31px 0; background: var(--gold); }
+    .contact-note { color: rgba(248,245,239,.53); font-size: .8rem; line-height: 1.8; }
+    .contact-form { padding: clamp(25px, 4vw, 43px); border: 1px solid rgba(197,173,131,.35); background: #201a14; }
+    .form-heading { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 25px; }
+    .form-heading h3 { margin: 0; font-size: 1.25rem; font-weight: 500; }
+    .form-heading span { color: var(--gold); font: .62rem 'DM Sans', sans-serif; letter-spacing: .13em; text-transform: uppercase; white-space: nowrap; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 17px; }
+    .form-field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+    .form-field.full { grid-column: 1 / -1; }
+    .form-field label { color: rgba(248,245,239,.83); font-size: .8rem; }
+    .form-field label .optional { color: rgba(248,245,239,.45); font-weight: 300; }
+    .form-field input, .form-field textarea, .form-field select { width: 100%; min-height: 47px; padding: 11px 13px; border: 1px solid rgba(232,221,200,.2); border-radius: 0; outline: none; background: #17130f; color: var(--paper); transition: border-color .2s ease, box-shadow .2s ease; }
+    .form-field input::placeholder, .form-field textarea::placeholder { color: rgba(248,245,239,.31); }
+    .form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(197,173,131,.13); }
+    .form-field textarea { resize: vertical; min-height: 105px; }
+    .form-help { margin: 16px 0 18px; color: rgba(248,245,239,.46); font-size: .72rem; line-height: 1.75; }
+    .form-submit { width: 100%; }
+    .form-status { display: none; margin-top: 15px; padding: 13px 14px; border-left: 2px solid var(--gold); color: var(--paper); background: rgba(197,173,131,.1); font-size: .82rem; line-height: 1.75; }
+    .form-status.show { display: block; }
+
+    /* Footer + modal */
+    .site-footer { padding: 47px 0 24px; color: rgba(248,245,239,.72); background: #100d0a; border-top: 1px solid var(--dark-line); }
+    .footer-main { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 40px; padding-bottom: 36px; }
+    .footer-brand { display: flex; gap: 15px; align-items: center; }
+    .footer-brand img { width: 65px; height: 70px; object-fit: cover; }
+    .footer-brand strong { display: block; color: var(--paper); font: 1.15rem var(--serif); letter-spacing: .2em; font-weight: 400; }
+    .footer-brand span { display: block; margin-top: 3px; color: var(--gold); font: .6rem 'DM Sans', sans-serif; letter-spacing: .1em; }
+    .footer-tagline { margin: 18px 0 0; color: rgba(248,245,239,.49); font-size: .82rem; }
+    .footer-column h3 { color: var(--gold-light); margin: 7px 0 17px; font-size: .83rem; font-weight: 600; }
+    .footer-links { display: grid; gap: 9px; list-style: none; padding: 0; margin: 0; }
+    .footer-links a, .footer-links button { padding: 0; border: 0; background: none; color: rgba(248,245,239,.56); text-align: left; font-size: .79rem; transition: color .2s; }
+    .footer-links a:hover, .footer-links button:hover { color: var(--gold-light); }
+    .footer-contact p { margin: 0; color: rgba(248,245,239,.56); font-size: .79rem; line-height: 1.8; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding-top: 20px; border-top: 1px solid rgba(232,221,200,.12); color: rgba(248,245,239,.38); font-size: .7rem; }
+    .footer-bottom a { color: var(--gold); }
+    .modal-backdrop { position: fixed; inset: 0; z-index: 200; display: none; align-items: center; justify-content: center; padding: 22px; background: rgba(0,0,0,.72); }
+    .modal-backdrop.open { display: flex; }
+    .privacy-modal { width: min(100%, 590px); max-height: 85vh; overflow: auto; padding: 32px; color: var(--ink); background: var(--paper); border: 1px solid var(--gold); box-shadow: 0 30px 100px rgba(0,0,0,.4); }
+    .modal-top { display: flex; justify-content: space-between; align-items: start; gap: 20px; }
+    .modal-top h2 { margin: 0 0 16px; font-size: 1.7rem; }
+    .modal-close { display: grid; place-items: center; flex: 0 0 36px; width: 36px; height: 36px; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 1.3rem; }
+    .privacy-modal p, .privacy-modal li { color: var(--muted); font-size: .88rem; line-height: 1.9; }
+    .privacy-modal ul { padding-left: 20px; }
+
+    /* Animations / responsive */
+    .reveal { opacity: 1; transform: none; }
+    .js-ready .reveal { opacity: 0; transform: translateY(19px); transition: opacity .7s ease, transform .7s ease; }
+    .js-ready .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: .08s !important; }
+    .delay-2 { transition-delay: .16s !important; }
+    .delay-3 { transition-delay: .24s !important; }
+    @media (max-width: 1080px) {
+      .nav-links { gap: 14px; }
+      .nav-links a { font-size: .72rem; }
+      .nav-cta { padding-inline: 12px; }
+      .brand { min-width: 155px; }
+      .hero-grid { gap: 25px; }
+      .hero-visual { width: min(100%, 400px); }
+    }
+    @media (max-width: 890px) {
+      .section { padding: 82px 0; }
+      .site-header { height: 75px; }
+      .menu-toggle { display: inline-flex; }
+      .nav-cta { display: none; }
+      .nav-links { position: fixed; top: 75px; left: 0; right: 0; display: flex; align-items: stretch; flex-direction: column; gap: 0; padding: 14px 24px 25px; background: rgba(23,19,15,.98); border-bottom: 1px solid var(--dark-line); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity .2s ease, visibility .2s ease, transform .2s ease; }
+      .nav-links.open { opacity: 1; visibility: visible; transform: translateY(0); }
+      .nav-links li { border-bottom: 1px solid rgba(232,221,200,.09); }
+      .nav-links a { display: block; padding: 13px 3px; font-size: .9rem; }
+      .nav-links a::after { display: none; }
+      .hero, .hero-grid { min-height: auto; }
+      .hero-grid { grid-template-columns: 1fr .82fr; padding-block: 65px; }
+      .hero-image { left: 30%; }
+      .hero h1 { font-size: clamp(2.5rem, 6vw, 4rem); }
+      .hero-logo { width: 88px; height: 88px; }
+      .hero-visual { padding: 10px; }
+      .visual-caption { font-size: .55rem; }
+      .product-grid, .business-grid { gap: 38px; }
+      .product-art img { height: 470px; }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 36px 24px; }
+      .steps-grid::before { display: none; }
+      .step-number { margin-left: 0; }
+      .spec-layout { grid-template-columns: 1fr; gap: 25px; }
+      .spec-intro { position: static; max-width: 680px; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .contact-copy > p { max-width: 650px; }
+      .footer-main { grid-template-columns: 1fr 1fr; }
+      .footer-main > div:first-child { grid-column: 1 / -1; }
+    }
+    @media (max-width: 640px) {
+      .container { width: min(calc(100% - 34px), var(--max)); }
+      .section { padding: 67px 0; }
+      .section-heading { margin-bottom: 34px; text-align: left; }
+      .section-heading .eyebrow { justify-content: flex-start; }
+      .section-heading p { margin-left: 0; }
+      .site-header { height: 70px; }
+      .brand-mark { width: 38px; height: 40px; }
+      .brand-name strong { font-size: .95rem; }
+      .brand-name span { font-size: .5rem; }
+      .nav-links { top: 70px; }
+      .hero::before { background: linear-gradient(180deg, rgba(23,19,15,.78), #17130f 56%, #17130f 100%); }
+      .hero-image { inset: 0; opacity: .52; }
+      .hero-image img { object-position: 55% center; }
+      .hero-grid { grid-template-columns: 1fr; gap: 37px; padding-block: 48px 56px; }
+      .hero-copy { padding: 0; }
+      .hero-logo { width: 75px; height: 75px; margin-bottom: 12px; }
+      .hero h1 { font-size: clamp(2.45rem, 12vw, 3.4rem); margin: 16px 0; }
+      .hero-lead { font-size: .9rem; }
+      .hero-tagline { margin: 20px 0 24px; }
+      .hero-actions { display: grid; grid-template-columns: 1fr; }
+      .hero-actions .btn { width: 100%; }
+      .hero-note { margin-top: 29px; }
+      .hero-visual { justify-self: center; width: min(83%, 330px); margin-right: 10px; }
+      .hero-visual img { aspect-ratio: 4 / 4.4; }
+      .hero-scroll { display: none; }
+      .product-grid, .business-grid { grid-template-columns: 1fr; }
+      .product-art img { height: 420px; }
+      .art-label { left: -7px; bottom: 27px; padding: 12px 15px; }
+      .objective-cards { grid-template-columns: 1fr; gap: 14px; }
+      .objective-card { min-height: auto; padding: 27px 24px; }
+      .objective-card .icon-box { margin-bottom: 21px; }
+      .steps-grid { grid-template-columns: 1fr; gap: 34px; }
+      .step-card { display: grid; grid-template-columns: 58px 1fr; column-gap: 15px; }
+      .step-number { width: 52px; height: 52px; margin: 0; grid-row: span 3; font-size: 1rem; }
+      .step-image { grid-column: 2; margin-bottom: 15px; }
+      .step-image img { aspect-ratio: 16/9; }
+      .step-label, .step-card h3, .step-card p { grid-column: 2; }
+      .step-label { align-self: end; }
+      .step-card h3 { margin-top: 7px; }
+      .demo-shell { grid-template-columns: 1fr; }
+      .demo-controls { padding: 27px 23px; }
+      .demo-stage { padding: 13px; }
+      .demo-image-wrap, .demo-image-wrap img { min-height: 310px; }
+      .demo-overlay { width: 48%; right: 11px; bottom: 11px; padding: 11px; }
+      .demo-stage-footer { align-items: flex-start; flex-direction: column; gap: 4px; padding: 13px 4px 4px; }
+      .business-photo img { height: 390px; }
+      .photo-stamp { width: 118px; height: 118px; right: -5px; bottom: 18px; }
+      .photo-stamp strong { font-size: 1.15rem; }
+      .spec-table th, .spec-table td { padding: 14px 12px; font-size: .78rem; }
+      .spec-table th { width: 39%; }
+      .contact-form { padding: 24px 18px; }
+      .form-grid { grid-template-columns: 1fr; gap: 14px; }
+      .form-field.full { grid-column: auto; }
+      .form-heading { align-items: flex-start; flex-direction: column; gap: 7px; }
+      .footer-main { grid-template-columns: 1fr 1fr; gap: 28px 18px; }
+      .footer-main > div:first-child { grid-column: 1 / -1; }
+      .footer-brand img { width: 55px; height: 60px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+      .privacy-modal { padding: 24px 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+      .js-ready .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#home" aria-label="ARAIOEI กลับไปหน้าแรก">
+        <img class="brand-mark" src="assets/logo-mark.png" alt="โลโก้ ARAIOEI">
+        <span class="brand-name"><strong>ARAIOEI</strong><span>SMART TRY-ON MIRROR</span></span>
+      </a>
+      <nav aria-label="เมนูหลัก">
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#product">ผลิตภัณฑ์</a></li>
+          <li><a href="#objectives">จุดเด่น</a></li>
+          <li><a href="#how-it-works">วิธีใช้งาน</a></li>
+          <li><a href="#demo">ทดลองเลือกสไตล์</a></li>
+          <li><a href="#business">สำหรับธุรกิจ</a></li>
+          <li><a href="#specifications">ข้อมูลผลิตภัณฑ์</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn-primary nav-cta" href="#contact">ขอใบเสนอราคา <span class="arrow">↗</span></a>
+      <button class="menu-toggle" type="button" id="menuToggle" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="navLinks">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-image" aria-hidden="true"><img src="assets/hero-mirror.webp" alt=""></div>
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <img class="hero-logo" src="assets/logo-mark.png" alt="ARAIOEI">
+          <span class="eyebrow">The future of fitting</span>
+          <h1>เปลี่ยนการลองชุด<br>ให้เป็น <em>ประสบการณ์ใหม่</em></h1>
+          <p class="hero-lead">พบกับ ARAIOEI Smart Try-On Mirror กระจกอัจฉริยะที่ผสานเทคโนโลยีและแฟชั่น ช่วยให้การทดลองชุดเสมือนจริงและการเลือกสไตล์เป็นเรื่องสะดวกยิ่งขึ้น</p>
+          <div class="hero-tagline">ส่องก่อนลอง มั่นใจก่อนใส่</div>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#product">ค้นพบผลิตภัณฑ์ <span class="arrow">↗</span></a>
+            <a class="btn btn-outline" href="#how-it-works">ดูวิธีการใช้งาน <span class="arrow">↓</span></a>
+          </div>
+          <div class="hero-note"><span></span> Smart technology · Modern fashion</div>
+        </div>
+        <div class="hero-visual reveal delay-2">
+          <img src="assets/wardrobe-demo.webp" alt="ภาพแนวคิดการลองชุดเสมือนจริงผ่านกระจก ARAIOEI">
+          <div class="visual-caption"><span>ARAIOEI / 01</span><span>Virtual wardrobe concept</span></div>
+        </div>
+      </div>
+      <a class="hero-scroll" href="#product" aria-label="เลื่อนลงไปดูผลิตภัณฑ์">SCROLL TO DISCOVER</a>
+    </section>
+
+    <section class="section product-section" id="product">
+      <div class="container product-grid">
+        <div class="product-art reveal">
+          <img src="assets/product-collage.webp" alt="ภาพนำเสนอผลิตภัณฑ์กระจกอัจฉริยะ ARAIOEI ในพื้นที่ทดลองชุด">
+          <div class="art-label"><strong>SMART MIRROR</strong><small>Virtual try-on experience</small></div>
+        </div>
+        <div class="product-copy reveal delay-1">
+          <span class="eyebrow">Meet the product</span>
+          <h2>SMART TRY-ON<br><em>MIRROR</em><span>กระจกอัจฉริยะลองชุดเสมือนจริง</span></h2>
+          <p>สำรวจลุคใหม่ ๆ ได้ง่ายขึ้น ผ่านแนวคิดกระจกอัจฉริยะและหน้าจอสัมผัส ช่วยให้ลูกค้าเห็นตัวเลือกเสื้อผ้า เปรียบเทียบสไตล์ และตัดสินใจได้สะดวกโดยไม่ต้องเปลี่ยนชุดจริงหลายครั้ง</p>
+          <div class="feature-list">
+            <div class="feature-row">
+              <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M7 3h10a2 2 0 0 1 2 2v14H5V5a2 2 0 0 1 2-2Z"/><path d="M9 7h6M8 16l3-3 2 2 3-4"/></svg></div>
+              <div><h3>ทดลองเสื้อผ้าเสมือนจริง</h3><p>ดูภาพจำลองชุดเพื่อใช้ประกอบการเปรียบเทียบลุค</p></div>
+            </div>
+            <div class="feature-row">
+              <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M7 8h4v4H7zM14 8h3M14 11h3M7 15h10"/></svg></div>
+              <div><h3>เลือกเสื้อผ้าผ่านหน้าจอ</h3><p>เรียกดูแบบ สี และสไตล์ที่สนใจจากอินเทอร์เฟซ</p></div>
+            </div>
+            <div class="feature-row">
+              <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg></div>
+              <div><h3>แนวคิด AI แนะนำสไตล์</h3><p>ต่อยอดการค้นหาลุคให้เหมาะกับโอกาสและความชอบ</p></div>
+            </div>
+          </div>
+          <a class="text-link" href="#contact">สนใจผลิตภัณฑ์ <span class="arrow">→</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section objectives-section" id="objectives">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Why ARAIOEI</span>
+          <h2>ทำไมต้องเลือก <em>Smart Try-On Mirror?</em></h2>
+          <p>ออกแบบแนวคิดเพื่อให้การเลือกเสื้อผ้าเป็นเรื่องง่ายขึ้น พร้อมสร้างประสบการณ์ใหม่ให้ทั้งลูกค้าและร้านค้า</p>
+        </div>
+        <div class="objective-cards">
+          <article class="objective-card reveal">
+            <span class="card-index">01</span>
+            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="8.5"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg></div>
+            <h3>เพิ่มความสะดวกสบาย</h3>
+            <p>ช่วยให้ลูกค้าลองชุดเสมือนจริงได้โดยไม่ต้องเปลี่ยนเสื้อผ้าจริงหลายครั้ง ทำให้การเลือกเสื้อผ้าสะดวกยิ่งขึ้น</p>
+            <div class="mini-rule"></div>
+          </article>
+          <article class="objective-card reveal delay-1">
+            <span class="card-index">02</span>
+            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2M8 2.5h8"/></svg></div>
+            <h3>ประหยัดเวลา</h3>
+            <p>ช่วยให้ลูกค้าเลือกชุดและเปรียบเทียบหลายสไตล์ได้รวดเร็วขึ้น ผ่านการแสดงตัวเลือกบนหน้าจอ</p>
+            <div class="mini-rule"></div>
+          </article>
+          <article class="objective-card reveal delay-2">
+            <span class="card-index">03</span>
+            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M4 20V9l8-5 8 5v11H4Z"/><path d="M8 20v-6h8v6M8 10h.01M12 10h.01M16 10h.01"/></svg></div>
+            <h3>เพิ่มโอกาสในการขาย</h3>
+            <p>ช่วยให้ร้านค้านำเสนอชุดที่เข้ากันและแนะนำสินค้าเพิ่มเติม เพื่อสร้างประสบการณ์การเลือกซื้อที่น่าสนใจยิ่งขึ้น</p>
+            <div class="mini-rule"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section steps-section" id="how-it-works">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Simple by design</span>
+          <h2>ใช้งานง่าย เพียง <em>4 ขั้นตอน</em></h2>
+          <p>ตัวอย่างลำดับประสบการณ์ผู้ใช้งาน ตั้งแต่เริ่มเลือกชุดจนถึงการสำรวจไอเดียการแต่งตัว</p>
+        </div>
+        <div class="steps-grid">
+          <article class="step-card reveal">
+            <div class="step-number">01</div>
+            <div class="step-image"><img src="assets/hero-mirror.webp" alt="ผู้ใช้งานยืนหน้ากระจกอัจฉริยะ"></div>
+            <div class="step-label">STAND</div>
+            <h3>ยืนหน้ากระจก</h3>
+            <p>ผู้ใช้งานยืนหน้ากระจก โดยระบบอาจตรวจจับตำแหน่งและรูปร่างตามความสามารถที่พัฒนาจริง</p>
+          </article>
+          <article class="step-card reveal delay-1">
+            <div class="step-number">02</div>
+            <div class="step-image"><img src="assets/retail-mirror.webp" alt="หน้าจอและตัวเลือกเสื้อผ้าภายในร้าน"></div>
+            <div class="step-label">SELECT</div>
+            <h3>เลือกเสื้อผ้า</h3>
+            <p>เลือกแบบ สี และสไตล์เสื้อผ้าที่ต้องการผ่านหน้าจอสัมผัส</p>
+          </article>
+          <article class="step-card reveal delay-2">
+            <div class="step-number">03</div>
+            <div class="step-image"><img src="assets/wardrobe-demo.webp" alt="แนวคิดการทดลองชุดเสมือนจริงบนกระจก"></div>
+            <div class="step-label">VIRTUAL TRY-ON</div>
+            <h3>ทดลองชุดเสมือนจริง</h3>
+            <p>ระบบแสดงภาพจำลองเสื้อผ้าบนตัวผู้ใช้งาน เพื่อช่วยเปรียบเทียบลุคและประกอบการตัดสินใจ</p>
+          </article>
+          <article class="step-card reveal delay-3">
+            <div class="step-number">04</div>
+            <div class="step-image"><img src="assets/green-dress-demo.webp" alt="ตัวอย่างการสำรวจสไตล์การแต่งตัวหลายลุค"></div>
+            <div class="step-label">AI STYLE RECOMMENDATION</div>
+            <h3>รับคำแนะนำจาก AI</h3>
+            <p>แนวคิดการแนะนำไอเดียการแต่งตัวสำหรับโอกาสต่าง ๆ ตามความสามารถของระบบที่เชื่อมต่อจริง</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section demo-section" id="demo">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Explore your look</span>
+          <h2>ค้นพบสไตล์ที่เป็นคุณ</h2>
+          <p>ลองเลือกหมวดหมู่และดูตัวอย่างแนวคิดการจัดลุคผ่านหน้าเว็บ</p>
+        </div>
+        <div class="demo-shell reveal">
+          <div class="demo-controls">
+            <span class="eyebrow">Style selector</span>
+            <h3>วันนี้คุณอยากได้ลุคแบบไหน?</h3>
+            <p>เลือกสไตล์ที่สนใจเพื่อเปลี่ยนภาพและคำอธิบายตัวอย่าง</p>
+            <div class="style-options" role="group" aria-label="เลือกสไตล์เสื้อผ้า">
+              <button class="style-option" type="button" data-style="casual" aria-pressed="true"><span><span class="style-name">Casual</span><span class="style-sub">ลุคสบาย ๆ</span></span><span class="style-arrow">↗</span></button>
+              <button class="style-option" type="button" data-style="office" aria-pressed="false"><span><span class="style-name">Office</span><span class="style-sub">ลุคทำงาน</span></span><span class="style-arrow">↗</span></button>
+              <button class="style-option" type="button" data-style="travel" aria-pressed="false"><span><span class="style-name">Travel</span><span class="style-sub">ลุคท่องเที่ยว</span></span><span class="style-arrow">↗</span></button>
+              <button class="style-option" type="button" data-style="party" aria-pressed="false"><span><span class="style-name">Party</span><span class="style-sub">ลุคออกงาน</span></span><span class="style-arrow">↗</span></button>
+            </div>
+            <div class="demo-buttons"><button class="btn btn-dark-outline" id="resetDemo" type="button">เริ่มต้นใหม่</button></div>
+            <p class="demo-note">หมายเหตุ: นี่คือเดโมแสดงแนวคิดการเลือกสไตล์ ไม่ใช่ระบบ Virtual Try-On หรือ AI ที่ประมวลผลภาพผู้ใช้แบบเรียลไทม์</p>
+          </div>
+          <div class="demo-stage" aria-live="polite">
+            <div class="demo-image-wrap">
+              <img id="demoImage" src="assets/hero-mirror.webp" alt="ภาพตัวอย่างสไตล์ Casual">
+              <div class="demo-badge">Style preview / demo</div>
+              <div class="demo-overlay"><small id="demoKicker">Everyday edit</small><strong id="demoLook">Casual — ลุคสบาย ๆ</strong><span id="demoDescription">เรียบง่าย คล่องตัว ใส่ได้ทุกวัน</span></div>
+            </div>
+            <div class="demo-stage-footer"><strong id="demoFooterTitle">Casual Collection</strong><span>Concept preview · ARAIOEI</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section business-section" id="business">
+      <div class="container business-grid">
+        <div class="business-photo reveal">
+          <img src="assets/retail-mirror.webp" alt="แนวคิดการติดตั้งกระจกอัจฉริยะในร้านแฟชั่น">
+          <div class="photo-stamp"><strong>Retail</strong><span>REIMAGINED</span></div>
+        </div>
+        <div class="business-copy reveal delay-1">
+          <span class="eyebrow">For modern retail</span>
+          <h2>ยกระดับประสบการณ์ลูกค้าด้วยเทคโนโลยี</h2>
+          <p>ต่อยอดพื้นที่หน้าร้านให้เป็นประสบการณ์แฟชั่นที่มีปฏิสัมพันธ์มากขึ้น ด้วยแนวคิดกระจกลองชุดเสมือนจริงที่เชื่อมต่อการค้นหาสไตล์เข้ากับการเลือกซื้อ</p>
+          <ul class="benefit-list">
+            <li><span class="check">✓</span><span>เพิ่มความน่าสนใจให้กับร้านค้าและพื้นที่ทดลองสินค้า</span></li>
+            <li><span class="check">✓</span><span>ช่วยให้ลูกค้าเปรียบเทียบตัวเลือกเสื้อผ้าได้สะดวกขึ้น</span></li>
+            <li><span class="check">✓</span><span>ลดความจำเป็นในการเปลี่ยนเสื้อผ้าจริงหลายครั้ง</span></li>
+            <li><span class="check">✓</span><span>เปิดโอกาสในการนำเสนอสินค้าที่เข้ากันและไอเดียการแต่งตัว</span></li>
+            <li><span class="check">✓</span><span>สร้างภาพลักษณ์ธุรกิจแฟชั่นที่ทันสมัยและแตกต่าง</span></li>
+          </ul>
+          <div style="margin-top:32px"><a class="btn btn-dark-outline" href="#contact">พูดคุยสำหรับธุรกิจ <span class="arrow">↗</span></a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section spec-section" id="specifications">
+      <div class="container spec-layout">
+        <div class="spec-intro reveal">
+          <span class="eyebrow">Product details</span>
+          <h2>ข้อมูลผลิตภัณฑ์</h2>
+          <p>สำหรับร้านค้า ผู้ประกอบการแฟชั่น และลูกค้าองค์กรที่ต้องการสำรวจแนวทางการนำกระจกอัจฉริยะไปใช้งาน</p>
+          <p>ข้อมูลด้านเทคนิคและบริการจะยืนยันอีกครั้งตามรุ่นผลิตภัณฑ์และขอบเขตการพัฒนาจริง</p>
+          <a class="text-link" href="#contact">สอบถามรายละเอียด <span class="arrow">→</span></a>
+        </div>
+        <div class="reveal delay-1">
+          <div class="spec-table-wrap">
+            <table class="spec-table">
+              <tbody>
+                <tr><th scope="row">ชื่อผลิตภัณฑ์</th><td>ARAIOEI Smart Try-On Mirror</td></tr>
+                <tr><th scope="row">ประเภทผลิตภัณฑ์</th><td>กระจกอัจฉริยะสำหรับแนวคิดการลองชุดเสมือนจริง</td></tr>
+                <tr><th scope="row">รูปแบบกระจก</th><td>กระจกทรงสูงเต็มตัว กรอบดีไซน์โมเดิร์น — รายละเอียดขึ้นอยู่กับรุ่นและการพัฒนา</td></tr>
+                <tr><th scope="row">หน้าจอสัมผัส</th><td>รายละเอียดขึ้นอยู่กับรุ่นและการพัฒนา</td></tr>
+                <tr><th scope="row">ระบบลองชุดเสมือนจริง</th><td>ความสามารถและการเชื่อมต่อขึ้นอยู่กับระบบที่พัฒนาจริง</td></tr>
+                <tr><th scope="row">ระบบแนะนำสไตล์</th><td>แนวคิด AI Style Recommendation — รายละเอียดขึ้นอยู่กับรุ่นและการพัฒนา</td></tr>
+                <tr><th scope="row">รูปแบบการติดตั้ง</th><td>สอบถามรูปแบบที่เหมาะสมกับพื้นที่และการใช้งาน</td></tr>
+                <tr><th scope="row">การรับประกันและบริการ</th><td>รายละเอียดขึ้นอยู่กับรุ่น ขอบเขตการให้บริการ และข้อเสนอจริง</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="spec-footnote">* ภาพและข้อความบนเว็บไซต์มีจุดประสงค์เพื่อสื่อสารแนวคิดผลิตภัณฑ์ ไม่ใช่การยืนยันสเปกทางเทคนิคหรือคุณสมบัติที่ยังไม่ได้ตรวจสอบ</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="contact">
+      <div class="container contact-grid">
+        <div class="contact-copy reveal">
+          <span class="eyebrow">Let's connect</span>
+          <h2>พร้อมยกระดับธุรกิจแฟชั่นของคุณหรือยัง?</h2>
+          <p>ติดต่อเราเพื่อสอบถามรายละเอียดผลิตภัณฑ์ ขอใบเสนอราคา หรือพูดคุยเกี่ยวกับการนำ Smart Try-On Mirror ไปใช้ในธุรกิจของคุณ</p>
+          <div class="contact-divider"></div>
+          <p class="contact-note">ยังไม่มีข้อมูลอีเมลหรือเบอร์โทรศัพท์ที่ยืนยันสำหรับเผยแพร่ โปรดใช้แบบฟอร์มตัวอย่างนี้ประกอบการออกแบบ และเชื่อมต่อระบบรับข้อมูลจริงก่อนเปิดใช้งานสาธารณะ</p>
+        </div>
+        <form class="contact-form reveal delay-1" id="quoteForm">
+          <div class="form-heading"><h3>ขอข้อมูล / ใบเสนอราคา</h3><span>Inquiry form</span></div>
+          <div class="form-grid">
+            <div class="form-field"><label for="contactName">ชื่อผู้ติดต่อ <span aria-hidden="true">*</span></label><input id="contactName" name="contactName" type="text" autocomplete="name" placeholder="ชื่อและนามสกุล" required></div>
+            <div class="form-field"><label for="companyName">ชื่อร้านค้าหรือบริษัท <span aria-hidden="true">*</span></label><input id="companyName" name="companyName" type="text" autocomplete="organization" placeholder="ชื่อธุรกิจ" required></div>
+            <div class="form-field"><label for="email">อีเมล <span aria-hidden="true">*</span></label><input id="email" name="email" type="email" autocomplete="email" placeholder="name@company.com" required></div>
+            <div class="form-field"><label for="phone">เบอร์โทรศัพท์ <span class="optional">(ไม่บังคับ)</span></label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="เบอร์โทรศัพท์"></div>
+            <div class="form-field full"><label for="quantity">จำนวนเครื่องที่สนใจ</label><select id="quantity" name="quantity"><option value="ยังไม่แน่ใจ">ยังไม่แน่ใจ / ขอคำแนะนำ</option><option value="1 เครื่อง">1 เครื่อง</option><option value="2–5 เครื่อง">2–5 เครื่อง</option><option value="6–10 เครื่อง">6–10 เครื่อง</option><option value="มากกว่า 10 เครื่อง">มากกว่า 10 เครื่อง</option></select></div>
+            <div class="form-field full"><label for="details">รายละเอียดเพิ่มเติม <span class="optional">(ไม่บังคับ)</span></label><textarea id="details" name="details" placeholder="เช่น ประเภทธุรกิจ พื้นที่ติดตั้ง หรือข้อมูลที่ต้องการสอบถาม"></textarea></div>
+          </div>
+          <p class="form-help">ช่องที่มีเครื่องหมาย * จำเป็นต้องกรอก แบบฟอร์มนี้เป็นเดโมและยังไม่ส่งข้อมูลไปยังเซิร์ฟเวอร์</p>
+          <button class="btn btn-primary form-submit" type="submit">ส่งคำขอใบเสนอราคา <span class="arrow">↗</span></button>
+          <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-main">
+        <div>
+          <div class="footer-brand"><img src="assets/logo-mark.png" alt="โลโก้ ARAIOEI"><div><strong>ARAIOEI</strong><span>SMART TRY-ON MIRROR</span></div></div>
+          <p class="footer-tagline">ลองก่อนลอง มั่นใจก่อนไป</p>
+        </div>
+        <div class="footer-column">
+          <h3>สำรวจเว็บไซต์</h3>
+          <ul class="footer-links">
+            <li><a href="#product">ผลิตภัณฑ์</a></li>
+            <li><a href="#objectives">จุดเด่น</a></li>
+            <li><a href="#how-it-works">วิธีการใช้งาน</a></li>
+            <li><a href="#demo">ทดลองเลือกสไตล์</a></li>
+            <li><a href="#specifications">ข้อมูลผลิตภัณฑ์</a></li>
+          </ul>
+        </div>
+        <div class="footer-column footer-contact">
+          <h3>ติดต่อและข้อมูล</h3>
+          <ul class="footer-links">
+            <li><a href="#contact">สอบถาม / ขอใบเสนอราคา</a></li>
+            <li><button type="button" id="openPrivacy">นโยบายความเป็นส่วนตัว</button></li>
+          </ul>
+          <p style="margin-top:13px">ยังไม่มีช่องทางติดต่อธุรกิจที่ยืนยันสำหรับเผยแพร่</p>
+        </div>
+      </div>
+      <div class="footer-bottom"><span>© <span id="copyrightYear">2026</span> ARAIOEI. All rights reserved.</span><span>Smart technology · Modern fashion</span></div>
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="privacyBackdrop" role="dialog" aria-modal="true" aria-labelledby="privacyTitle">
+    <div class="privacy-modal">
+      <div class="modal-top"><h2 id="privacyTitle">นโยบายความเป็นส่วนตัว</h2><button class="modal-close" type="button" id="closePrivacy" aria-label="ปิดหน้าต่าง">×</button></div>
+      <p><strong>เว็บไซต์เดโม ARAIOEI</strong> แบบฟอร์มติดต่อบนหน้านี้ใช้เพื่อสาธิตประสบการณ์การกรอกข้อมูลเท่านั้น ยังไม่มีการเชื่อมต่อระบบหลังบ้านและไม่มีการส่งข้อมูลออกจากเบราว์เซอร์</p>
+      <ul>
+        <li>เมื่อกดส่ง ระบบจะแสดงข้อความยืนยันการจำลองการส่งเท่านั้น</li>
+        <li>อย่ากรอกข้อมูลส่วนบุคคลที่ละเอียดอ่อนลงในเว็บไซต์เดโมนี้</li>
+        <li>ก่อนเปิดให้บริการจริง ควรแจ้งผู้ควบคุมข้อมูล วัตถุประสงค์ ระยะเวลาเก็บรักษา ช่องทางติดต่อ และสิทธิของเจ้าของข้อมูลให้ครบถ้วน</li>
+      </ul>
+      <p>นโยบายฉบับนี้เป็นข้อความสำหรับต้นแบบ ควรได้รับการปรับปรุงให้สอดคล้องกับระบบที่ใช้งานจริงก่อนเผยแพร่</p>
+      <button class="btn btn-primary" type="button" id="privacyDone">รับทราบ</button>
+    </div>
+  </div>
+
+  <script>
+    document.documentElement.classList.add('js-ready');
+
+    // Mobile navigation
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    function closeMenu() {
+      navLinks.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.setAttribute('aria-label', 'เปิดเมนู');
+      document.body.classList.remove('menu-open');
+    }
+    menuToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+      menuToggle.setAttribute('aria-label', isOpen ? 'ปิดเมนู' : 'เปิดเมนู');
+      document.body.classList.toggle('menu-open', isOpen);
+    });
+    navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+    window.addEventListener('resize', () => { if (window.innerWidth > 890) closeMenu(); });
+
+    // Style demo: all states are illustrative. No camera, body tracking, or live AI is used.
+    const demoStates = {
+      casual: { image: 'assets/hero-mirror.webp', alt: 'ตัวอย่างแนวคิดลุค Casual ผ่านกระจกอัจฉริยะ', kicker: 'Everyday edit', look: 'Casual — ลุคสบาย ๆ', description: 'เรียบง่าย คล่องตัว ใส่ได้ทุกวัน', footer: 'Casual Collection' },
+      office: { image: 'assets/retail-mirror.webp', alt: 'ตัวอย่างแนวคิดลุค Office ในพื้นที่ร้านแฟชั่น', kicker: 'Workday essentials', look: 'Office — ลุคทำงาน', description: 'สุภาพ เรียบหรู พร้อมสำหรับวันทำงาน', footer: 'Office Collection' },
+      travel: { image: 'assets/green-dress-demo.webp', alt: 'ตัวอย่างแนวคิดลุค Travel และชุดเดรสสีเขียว', kicker: 'Ready to explore', look: 'Travel — ลุคท่องเที่ยว', description: 'เลือกชิ้นที่ใส่สบายและแมตช์ได้หลายแบบ', footer: 'Travel Collection' },
+      party: { image: 'assets/party-demo.webp', alt: 'ตัวอย่างแนวคิดลุค Party สำหรับออกงาน', kicker: 'After-hours edit', look: 'Party — ลุคออกงาน', description: 'เพิ่มความโดดเด่นด้วยลุคที่เหมาะกับโอกาส', footer: 'Party Collection' }
+    };
+    const styleButtons = Array.from(document.querySelectorAll('.style-option'));
+    const demoImage = document.getElementById('demoImage');
+    const demoKicker = document.getElementById('demoKicker');
+    const demoLook = document.getElementById('demoLook');
+    const demoDescription = document.getElementById('demoDescription');
+    const demoFooterTitle = document.getElementById('demoFooterTitle');
+    function setStyle(key) {
+      const state = demoStates[key] || demoStates.casual;
+      styleButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.style === key)));
+      demoImage.style.opacity = '0.25';
+      window.setTimeout(() => {
+        demoImage.src = state.image;
+        demoImage.alt = state.alt;
+        demoKicker.textContent = state.kicker;
+        demoLook.textContent = state.look;
+        demoDescription.textContent = state.description;
+        demoFooterTitle.textContent = state.footer;
+        demoImage.style.opacity = '1';
+      }, 120);
+    }
+    styleButtons.forEach(button => button.addEventListener('click', () => setStyle(button.dataset.style)));
+    document.getElementById('resetDemo').addEventListener('click', () => setStyle('casual'));
+
+    // Quote form demo validation. Native required/email checks run before submit.
+    const quoteForm = document.getElementById('quoteForm');
+    const formStatus = document.getElementById('formStatus');
+    quoteForm.addEventListener('submit', event => {
+      event.preventDefault();
+      if (!quoteForm.reportValidity()) return;
+      const name = document.getElementById('contactName').value.trim();
+      const company = document.getElementById('companyName').value.trim();
+      formStatus.textContent = `ขอบคุณคุณ${name} จาก ${company} — แบบฟอร์มผ่านการตรวจสอบแล้ว แต่ยังไม่ได้ส่งข้อมูลจริง เนื่องจากเว็บไซต์นี้ยังไม่มีระบบ Backend กรุณาเชื่อมต่อระบบรับคำขอก่อนใช้งานจริง`;
+      formStatus.classList.add('show');
+      formStatus.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    // Privacy modal
+    const privacyBackdrop = document.getElementById('privacyBackdrop');
+    const openPrivacy = document.getElementById('openPrivacy');
+    const closePrivacy = document.getElementById('closePrivacy');
+    const privacyDone = document.getElementById('privacyDone');
+    function showPrivacy() { privacyBackdrop.classList.add('open'); closePrivacy.focus(); }
+    function hidePrivacy() { privacyBackdrop.classList.remove('open'); openPrivacy.focus(); }
+    openPrivacy.addEventListener('click', showPrivacy);
+    closePrivacy.addEventListener('click', hidePrivacy);
+    privacyDone.addEventListener('click', hidePrivacy);
+    privacyBackdrop.addEventListener('click', event => { if (event.target === privacyBackdrop) hidePrivacy(); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && privacyBackdrop.classList.contains('open')) hidePrivacy(); });
+
+    // Highlight currently visible nav section and reveal elements on scroll.
+    const revealItems = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      const revealObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      revealItems.forEach(item => revealObserver.observe(item));
+    } else {
+      revealItems.forEach(item => item.classList.add('is-visible'));
+    }
+    const sections = Array.from(document.querySelectorAll('main section[id]'));
+    const menuAnchors = Array.from(document.querySelectorAll('.nav-links a'));
+    if ('IntersectionObserver' in window) {
+      const sectionObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            menuAnchors.forEach(anchor => anchor.classList.toggle('active', anchor.getAttribute('href') === `#${entry.target.id}`));
+          }
+        });
+      }, { rootMargin: '-35% 0px -55% 0px', threshold: 0 });
+      sections.forEach(section => sectionObserver.observe(section));
+    }
+    document.getElementById('copyrightYear').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
